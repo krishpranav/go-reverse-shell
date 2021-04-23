@@ -104,6 +104,7 @@ func str_to_int(string_integer string) int {
 	return i
 }
 
+// gap interval
 func interval_to_seconds(interval string) int64{ 
     period_letter := string(interval[len(interval)-1])
     intr := string(interval[:len(interval)-1]) //Check this
@@ -119,7 +120,7 @@ func interval_to_seconds(interval string) int64{
     return i
 }
 
-// input
+// input function
 func input(name string, message string, default_value string) string{
     if default_value == ""{
         default_value = "none"
@@ -130,10 +131,9 @@ func input(name string, message string, default_value string) string{
         InterruptPrompt:     "^C",
     })
     line, _ := p.Readline()
-	if (len(line) == 0 || contains([]string{"y", "yes"}, line)){
-		return default_value
-	} else {
-		return line
-	}
-
+    if (len(line) == 0 || contains([]string{"y", "yes"}, line)){
+        return default_value
+    } else {
+        return line
+    }
 }
