@@ -119,3 +119,21 @@ func interval_to_seconds(interval string) int64{
     return i
 }
 
+// input
+func input(name string, message string, default_value string) string{
+    if default_value == ""{
+        default_value = "none"
+    }
+    final_prompt := fmt.Sprintf("%s %s (default: %s): ", red(name), message, default_value)
+    p, _ := readline.NewEx(&readline.Config{
+        Prompt:              final_prompt,
+        InterruptPrompt:     "^C",
+    })
+    line, _ := p.Readline()
+	if (len(line) == 0 || contains([]string{"y", "yes"}, line)){
+		return default_value
+	} else {
+		return line
+	}
+
+}
