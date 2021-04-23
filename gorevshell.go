@@ -98,3 +98,8 @@ func contains(s interface{}, elem interface{}) bool {
 	return false
 }
 
+func str_to_int(string_integer string) int {
+	i, _ := strconv.Atoi(string_integer)
+	return i
+}
+
