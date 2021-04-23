@@ -98,8 +98,24 @@ func contains(s interface{}, elem interface{}) bool {
 	return false
 }
 
+// convert payload from str to int
 func str_to_int(string_integer string) int {
 	i, _ := strconv.Atoi(string_integer)
 	return i
+}
+
+func interval_to_seconds(interval string) int64{ 
+    period_letter := string(interval[len(interval)-1])
+    intr := string(interval[:len(interval)-1]) //Check this
+    i, _ := strconv.ParseInt(intr, 10, 64) 
+    switch period_letter{
+        case "s":
+            return i
+        case "m":
+            return i*60
+        case "h":
+            return i*3600
+    }
+    return i
 }
 
