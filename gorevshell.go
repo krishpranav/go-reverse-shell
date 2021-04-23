@@ -62,3 +62,18 @@ var red = color.New(color.FgRed).SprintFunc()
 var green = color.New(color.FgGreen).SprintFunc()
 var cyan = color.New(color.FgBlue).SprintFunc()
 var bold = color.New(color.Bold).SprintFunc()
+
+// print message
+func print(msg string){
+	fmt.Printf("%s %s", green("[+]"), msg)
+}
+
+// info
+func print_info(msg string){
+	fmt.Println("[+]", msg)
+}
+
+func print_error(msg, string) {
+	fmt.Printf("%s %s", red("[x]"), msg)
+}
+
