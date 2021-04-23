@@ -19,7 +19,7 @@ import (
 	"time"
 )
 
-// banner for revshell
+// function for showing the banner
 func banner(){
 	banner := figure.NewFigure("GO REV SHELL", "", true)
 	color.Set(color.Bold)
@@ -28,4 +28,18 @@ func banner(){
 		fmt.Println("")
 		fmt.Println(cyan("\t -- A polygot payload generator -- "))
 	fmt.Println("")
+}
+
+// function for showing the payload list
+func list(){
+	actions_data := [][]string{
+        []string{"reverse_shell", "Spawn a reverse shell"},
+        []string{"cmd_exec", "Execute a command"},
+		[]string{"forkbomb", "Run a forkbomb"},
+		[]string{"memexec", "Embed and execute a binary"},
+		[]string{"download_exec", "Download and execute a file"},
+		[]string{"shutdown", "Shutdown computer"},
+        []string{"custom", "Use custom Bash and Powershell scripts"},
+    }
+
 }
