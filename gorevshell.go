@@ -42,4 +42,21 @@ func list(){
         []string{"custom", "Use custom Bash and Powershell scripts"},
     }
 
+		actions_table := tablewriter.NewWriter(os.Stdout)
+		actions_table.SetAutoWrapText(false)
+		actions_table.SetHeader([]string{"NAME", "DESCRIPTION"})
+	actions_table.SetColumnColor(
+		tablewriter.Colors{tablewriter.FgGreenColor},
+		tablewriter.Colors{},
+	)
+
+	for v := range actions_data {
+		actions_table.Append(actions_data[v])
+	}
+
+	fmt.Println("")
+	fmt.Println("[+] Payloads: ")
+
+	actions_table.Render()
+	fmt.Println("")
 }
