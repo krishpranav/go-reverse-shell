@@ -73,7 +73,15 @@ func print_info(msg string){
 	fmt.Println("[+]", msg)
 }
 
-func print_error(msg, string) {
+// print error
+func print_error(msg string){
 	fmt.Printf("%s %s", red("[x]"), msg)
 }
 
+// print header
+func print_header(message string) {
+	color.Set(colors.Bold)
+	fmt.Printf("-- %s --", message)
+	color.Unset()
+	fmt.Println("")
+}
