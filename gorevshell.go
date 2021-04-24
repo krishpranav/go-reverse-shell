@@ -175,3 +175,9 @@ func base64_decode(str string) string {
 	raw, _ := base64.StdEncoding.DecodeString(str)
 	return fmt.Sprintf("%s", raw)
 }
+
+// encode base64 files
+func base64_encode(str string) string {
+	return base64.StdEncoding.EncodeToString([]byte(str))
+}
+
