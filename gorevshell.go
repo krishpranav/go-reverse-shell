@@ -305,3 +305,18 @@ fmt.Println(polyglot_template)
 }
 
 }
+
+func main(){
+	print_banner()
+    parser := argparse.NewParser("snowcrash", "")
+    var OUT *string = parser.String("o", "out", &argparse.Options{Required: false, Default: "polyglot_script", Help: "Name of the generated polyglot file"})
+    var LIST *bool = parser.Flag("l", "list", &argparse.Options{Required: false, Help: "List available payloads"})
+	var PAYLOAD *string = parser.String("p", "payload", &argparse.Options{Required: false, Help: "Name of the payload to use"})
+	var SLEEP *string = parser.String("s", "sleep", &argparse.Options{Required: false, Default: "0s", Help: "Sleep given interval before executing the payload"})
+	var STDOUT *bool = parser.Flag("", "stdout", &argparse.Options{Required: false, Help: "Print payload to STDOUT instead of writing to file"})
+	_ = OUT
+	_ = LIST
+	_ = PAYLOAD
+
+	
+}
