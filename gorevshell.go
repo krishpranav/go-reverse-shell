@@ -181,3 +181,10 @@ func base64_encode(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))
 }
 
+// function for templates
+func get_template(template_name string) string{
+	template, err := packr.NewBox("./").FindString(template_name)
+	exit_on_error("[PACKR ERROR]", err)
+	return template
+}
+
