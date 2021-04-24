@@ -161,3 +161,11 @@ func read_file(filename string) string {
 	}
 	return contents
 }
+
+// exit connection on error
+func exit_on_error(message string, err error){
+	if err != nil{
+		fmt.Printf("%s %v", red(message+":"),err)
+		os.Exit(0)
+	}
+}
