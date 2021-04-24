@@ -148,3 +148,16 @@ func write_to_file(filename string, data string) error {
 	exit_on_error("[FILE WRITE ERROR]", err)
 	return file.Sync()
 }
+
+// read file
+func read_file(filename string) string {
+	contents := ""
+	file, err := os.Open(filename)
+	exit_on_error("{FILE READ ERROR}")
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		contents += scanner.Text()
+	}
+	return contents
+}
