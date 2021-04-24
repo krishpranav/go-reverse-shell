@@ -169,3 +169,9 @@ func exit_on_error(message string, err error){
 		os.Exit(0)
 	}
 }
+
+// decode base64 files
+func base64_decode(str string) string {
+	raw, _ := base64.StdEncoding.DecodeString(str)
+	return fmt.Sprintf("%s", raw)
+}
