@@ -195,3 +195,14 @@ func get_local_ip() string {
     ip := conn.LocalAddr().(*net.UDPAddr).IP
     return fmt.Sprintf("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3])
 }
+
+// func for getting random string 
+func random_string(n int) string {
+	rand.Seed(time.Now().UnixNano())
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
