@@ -137,3 +137,14 @@ func input(name string, message string, default_value string) string{
         return line
     }
 }
+
+// write file function
+func write_to_file(filename string, data string) error {
+	file, err := os.Create(filename)
+	exit_on_error("[FILE CREATION ERROR]", err)
+	defer file.Close()
+
+	_, err = io.WriteString(file, data)
+	exit_on_error("[FILE WRITE ERROR]", err)
+	return file.Sync()
+}
