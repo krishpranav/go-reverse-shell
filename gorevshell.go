@@ -188,3 +188,10 @@ func get_template(template_name string) string{
 	return template
 }
 
+// func for getting the target local ip
+func get_local_ip() string {
+    conn, _ := net.Dial("udp", "8.8.8.8:80")
+    defer conn.Close()
+    ip := conn.LocalAddr().(*net.UDPAddr).IP
+    return fmt.Sprintf("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3])
+}
